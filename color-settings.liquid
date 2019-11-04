@@ -1,0 +1,54 @@
+<!-- Coded by iShopifyexpert - Aaliyan Guru -->
+{%- if section.settings.enable_color -%}
+<style>
+{%- for block in section.blocks -%}{% if block.settings.color_title != blank %}
+.codehouse-{{ block.settings.color_title | handle }} {
+   background-color: {% if block.settings.color_code != blank %}{{ block.settings.color_code }}{% else %}{{ block.settings.color_title | split: ' ' | last | handle }}{% endif %} !important;{% if block.settings.color_image != blank %}
+   background-image: url({{ block.settings.color_image | img_url: '25x25' }}) !important;{% endif %}
+}
+{%- endif -%}{%- endfor -%}
+</style>
+{%- endif -%}
+
+{% schema %}
+{ 
+   "name":"Swatchs Color Setting",
+   "settings":[ 
+      { 
+         "type":"checkbox",
+         "id":"enable_color",
+         "label":"Enable Settings"
+      }
+   ],
+   "blocks":[ 
+      { 
+         "type":"color",
+         "name":"Swatch",
+         "settings":[ 
+            {
+               "type": "header",
+               "content": "Swatche background",
+               "info":"choose colors for this swatch"
+            },
+            { 
+               "type":"text",
+               "id":"color_title",
+               "label":"Swatch Title",
+               "default":"Exact Same"
+            },
+            { 
+               "type":"color",
+               "id":"color_code",
+               "label":"Swatch Color",
+               "default":"#000000"
+            },
+            { 
+               "type":"image_picker",
+               "id":"color_image",
+               "label":"Swatch Image"
+            }
+         ]
+      }
+   ]
+}
+{% endschema %}
