@@ -1,0 +1,1 @@
+# swatches-color-settings-section
