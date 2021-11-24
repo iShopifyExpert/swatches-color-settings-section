@@ -1,0 +1,57 @@
+{%- liquid
+   assign option_limit = 3
+   assign options_to_show = 'Color, Size' | replace: ', ', ',' | split: ','
+-%}
+{%- for product_option in product.options_with_values -%}
+{%- if options_to_show contains product_option.name -%}
+{%- liquid
+   if options_to_show contains product_option.name
+     assign is_swatch = true
+      else
+     assign is_swatch = false
+   endif
+-%}
+<div class="product-block-options{% if is_swatch %} product-block-options--swatch{% endif %}" data-option-name="{{ product_option.name | escape }}">
+  <div class="product-block-options__inner">
+    {%- if product.options.size == 1 -%}
+    {%- for variant in product.variants -%}
+    <span class="product-block-options__item codehouse-{{ variant.title | handle }}{% unless variant.available %} product-block-options__item--unavailable{% endunless %}{% if forloop.index > option_limit and is_swatch %} product-block-options__item--truncated{% endif %}{% if is_swatch %} lazyload{% endif %}" data-option-item="{{ variant.title | downcase | escape }}"
+    {% if variant.featured_media %}data-media="{{ variant.featured_media.id }}"{% endif %}
+    {% if is_swatch %}{% if settings.swatch_images %}data-bgset="{{ variant.title | handle | append: '.png' | file_img_url: '48x48', crop: 'center' }}"{% else %}style="background-color:{{ variant.title | downcase | remove: ' ' | escape }}"{% endif %}{% endif %}><span class="product-block-options__item__text">{{ variant.title }}</span></span>
+    {%- endfor -%}
+    {%- if product.variants.size > option_limit and is_swatch -%}
+    {%- assign remaining = product.variants.size | minus: option_limit -%}
+    <span class="product-block-options__more-label">{{ 'collections.general.more_swatches' | t: count: remaining }}</span>
+    {%- endif -%}
+    {%- else -%}
+    {%- assign product_option_position_0index = product_option.position | minus: 1 -%}
+    {%- for product_option_value in product_option.values -%}
+    {%- liquid
+      assign option_value_variant = false
+      assign is_unavailable = true
+      for variant in product.variants
+        if variant.options[product_option_position_0index] == product_option_value
+         assign option_value_variant = variant
+         break
+        endif
+      endfor
+      for variant in product.variants
+        if variant.available and variant.options[product_option_position_0index] == product_option_value
+         assign is_unavailable = false
+         break
+        endif
+      endfor
+    -%}
+    <span class="product-block-options__item codehouse-{{ product_option_value | handle }}{% if is_unavailable %} product-block-options__item--unavailable{% endif %}{% if forloop.index > option_limit and is_swatch %} product-block-options__item--truncated{% endif %}{% if is_swatch %} lazyload{% endif %}" data-option-item="{{ product_option_value | downcase | escape }}"
+    {% if option_value_variant.featured_media %}data-media="{{ option_value_variant.featured_media.id }}"{% endif %}
+    {% if is_swatch %}{% if settings.swatch_images %}data-bgset="{{ product_option_value | handle | append: '.png' | file_img_url: '48x48', crop: 'center' }}"{% else %}style="background-color:{{ product_option_value | downcase | remove: ' ' | escape }}"{% endif %}{% endif %}>{% if product_option.name == 'Size' %}{{ product_option_value | downcase | escape }}{% endif %}<span class="product-block-options__item__text">{{ product_option_value }}</span></span>
+    {%- endfor -%}
+    {%- if product_option.values.size > option_limit and is_swatch -%}
+    {%- assign remaining = product_option.values.size | minus: option_limit -%}
+    <span class="product-block-options__more-label">+ {{ remaining }} more</span>
+    {%- endif -%}
+    {%- endif -%}
+  </div>
+</div>
+{%- endif -%}
+{%- endfor -%}
