@@ -53,6 +53,10 @@
   background-repeat: no-repeat;
   background-clip: padding-box;
 }
+.product-block-options--swatch[data-option-name="Size"] .product-block-options__item {
+    line-height: 20px;
+    text-align: center;
+}
 @media (min-width: 768px) {
   .product-block-options--swatch .product-block-options__item {
     margin: 0 7px 12px;
@@ -69,7 +73,7 @@
 }
 .product-block-options--swatch .product-block-options__item.product-block-options__item--unavailable {
   text-decoration: none;
-  box-shadow: 0 0 0 2px #ffffff, 0 0 0 3px rgba(99, 115, 129, 0.3);
+  box-shadow: 0 0 0 3px #fff, 0 0 0 2px rgb(99 115 129 / 80%);
 }
 @media (min-width: 768px) {
   .product-block-options--swatch .product-block-options__item.product-block-options__item--unavailable {
